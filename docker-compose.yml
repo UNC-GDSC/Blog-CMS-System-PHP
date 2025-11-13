@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # PHP Application with Apache
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blog_cms_app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./logs:/var/www/html/logs
+    environment:
+      - APP_ENV=development
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=blog_cms
+      - DB_USER=blog_user
+      - DB_PASS=blog_password
+    depends_on:
+      - db
+    networks:
+      - blog_network
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: blog_cms_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: blog_cms
+      MYSQL_USER: blog_user
+      MYSQL_PASSWORD: blog_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - blog_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PHPMyAdmin (Optional - for database management)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: blog_cms_phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root_password
+    depends_on:
+      - db
+    networks:
+      - blog_network
+
+networks:
+  blog_network:
+    driver: bridge
+
+volumes:
+  db_data:

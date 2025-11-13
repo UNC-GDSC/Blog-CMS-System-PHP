@@ -1,238 +1,401 @@
-# PHP Blog CMS
+# Blog CMS System - PHP Edition
 
-A simple Blog Content Management System (CMS) built using PHP and MySQL. This application provides a basic web interface for creating, reading, updating, and deleting (CRUD) blog posts. It is designed for learning and development purposes, and can be extended with features like user authentication, comments, and an administrative dashboard.
+A modern, secure, and well-architected Blog Content Management System built with PHP 8+, featuring user authentication, CSRF protection, input validation, and a clean Bootstrap 5 interface. This project demonstrates professional PHP development practices with proper separation of concerns, repository pattern, and comprehensive security features.
 
 ## Table of Contents
 
 1. [Overview](#overview)
 2. [Features](#features)
-3. [Architecture & Design](#architecture--design)
+3. [Architecture](#architecture)
 4. [Tech Stack](#tech-stack)
-5. [Installation & Setup](#installation--setup)
-    - [Prerequisites](#prerequisites)
-    - [Local Setup](#local-setup)
-    - [Environment Configuration](#environment-configuration)
-6. [Database Schema](#database-schema)
-7. [File Structure](#file-structure)
-8. [Usage](#usage)
-9. [Testing](#testing)
-10. [Deployment](#deployment)
-    - [Apache/Nginx Setup](#apachenignx-setup)
-    - [Docker Deployment](#docker-deployment)
-11. [Security Considerations](#security-considerations)
+5. [Installation](#installation)
+6. [Configuration](#configuration)
+7. [Usage](#usage)
+8. [Project Structure](#project-structure)
+9. [Security Features](#security-features)
+10. [Docker Deployment](#docker-deployment)
+11. [Testing](#testing)
 12. [Future Enhancements](#future-enhancements)
-13. [Troubleshooting & FAQ](#troubleshooting--faq)
-14. [Contributing](#contributing)
-15. [License](#license)
+13. [Contributing](#contributing)
+14. [License](#license)
 
 ---
 
 ## Overview
 
-The PHP Blog CMS is a lightweight content management system that allows users to manage blog posts through a simple web interface. It demonstrates the basics of PHP with SQL persistence using PDO and MySQL. The application covers core CRUD operations and provides a foundation to expand with advanced features like user authentication, search, and SEO-friendly URLs.
+This Blog CMS System is a production-ready content management platform that showcases modern PHP development practices. It features a clean MVC-inspired architecture, robust security measures, and an intuitive user interface built with Bootstrap 5.
+
+### Key Highlights
+
+- **Modern Architecture**: Repository pattern, dependency injection, and proper separation of concerns
+- **Security First**: CSRF protection, input validation, password hashing, and SQL injection prevention
+- **User Authentication**: Complete login/registration system with session management
+- **Developer Friendly**: Clean code, comprehensive logging, and environment-based configuration
+- **Production Ready**: Docker support, error handling, and scalable architecture
 
 ---
 
 ## Features
 
-- **CRUD Operations:** Create, read, update, and delete blog posts.
-- **Responsive UI:** Built with Bootstrap for a mobile-friendly experience.
-- **Simple Routing:** Easy-to-understand PHP scripts for each operation.
-- **Database Integration:** Uses MySQL with PDO for secure database interactions.
-- **Extensible:** Serves as a foundation for adding features like comments and user management.
+### Core Functionality
+- ✅ **User Authentication**: Secure registration, login, and session management
+- ✅ **Blog Post Management**: Full CRUD operations (Create, Read, Update, Delete)
+- ✅ **Search Functionality**: Search posts by title or content
+- ✅ **Pagination**: Efficient pagination for large post collections
+- ✅ **Responsive Design**: Mobile-first Bootstrap 5 interface
+- ✅ **Flash Messages**: User-friendly success/error notifications
+
+### Security Features
+- ✅ **CSRF Protection**: Token-based protection on all forms
+- ✅ **Input Validation**: Comprehensive server-side validation
+- ✅ **Password Hashing**: Bcrypt password encryption
+- ✅ **SQL Injection Prevention**: Prepared statements with PDO
+- ✅ **XSS Protection**: Proper output escaping
+- ✅ **Session Security**: Secure session configuration and regeneration
+
+### Developer Features
+- ✅ **Environment Configuration**: `.env` file support
+- ✅ **Logging System**: Comprehensive error and activity logging
+- ✅ **Repository Pattern**: Clean database abstraction layer
+- ✅ **Autoloading**: PSR-4 compliant autoloader
+- ✅ **Error Handling**: Custom error and exception handlers
+- ✅ **Docker Support**: One-command deployment
 
 ---
 
-## Architecture & Design
+## Architecture
 
-### System Overview
+### Directory Structure
 
-- **Frontend:**  
-  HTML, CSS, JavaScript (with Bootstrap) for a responsive and clean user interface.
-  
-- **Backend:**  
-  PHP scripts that handle business logic and routing, using PDO for database interactions.
+```
+Blog-CMS-System-PHP/
+├── bootstrap.php              # Application initialization
+├── .env                       # Environment configuration (not in repo)
+├── .env.example              # Environment template
+├── docker-compose.yml        # Docker configuration
+├── Dockerfile                # Docker image definition
+│
+├── database/
+│   └── schema.sql           # Database schema with indexes
+│
+├── public/                   # Public web root
+│   ├── index.php            # Homepage (list posts)
+│   ├── view_post.php        # Single post view
+│   ├── create_post.php      # Create new post
+│   ├── edit_post.php        # Edit existing post
+│   ├── delete_post.php      # Delete post handler
+│   ├── login.php            # User login
+│   ├── register.php         # User registration
+│   └── logout.php           # Logout handler
+│
+├── src/
+│   ├── Config/
+│   │   └── Database.php     # Database connection (Singleton)
+│   │
+│   ├── Controllers/
+│   │   ├── PostController.php    # Post management logic
+│   │   └── AuthController.php    # Authentication logic
+│   │
+│   ├── Models/
+│   │   ├── BaseRepository.php    # Base CRUD operations
+│   │   ├── PostRepository.php    # Post-specific queries
+│   │   └── UserRepository.php    # User-specific queries
+│   │
+│   ├── Middleware/
+│   │   └── Auth.php         # Authentication middleware
+│   │
+│   ├── Helpers/
+│   │   ├── Env.php          # Environment variable loader
+│   │   ├── Logger.php       # File-based logger
+│   │   ├── Session.php      # Session management
+│   │   ├── CSRF.php         # CSRF token handler
+│   │   └── Validator.php    # Input validation
+│   │
+│   └── Views/
+│       ├── header.php       # HTML header template
+│       └── footer.php       # HTML footer template
+│
+├── logs/                     # Application logs
+└── tests/                    # Unit tests (future)
+```
 
-- **Database Layer:**  
-  A MySQL database stores blog posts and (optionally) user and comment data.
+### Design Patterns
 
-### Component Breakdown
-
-- **User Module:**  
-  (Future Enhancement) Manage user authentication and roles.
-
-- **Blog Module:**  
-  Manages blog posts with operations to create, edit, view, and delete content.
-
-- **Admin Dashboard:**  
-  (Optional) Interface for site administrators to manage posts and view statistics.
+- **Repository Pattern**: Clean separation between data access and business logic
+- **Singleton Pattern**: Database connection management
+- **MVC Architecture**: Separation of views, controllers, and models
+- **Dependency Injection**: Controllers receive dependencies
+- **Factory Pattern**: Used in database connection creation
 
 ---
 
 ## Tech Stack
 
-- **Programming Language:** PHP (7.4+)
-- **Database:** MySQL or MariaDB
-- **Web Server:** Apache or Nginx (or PHP’s built-in server for development)
-- **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 4
-- **ORM/Database Interaction:** PDO
-- **Dependency Management:** None required for core functionality (Composer optional for further extensions)
+| Layer | Technology | Version |
+|-------|-----------|---------|
+| **Language** | PHP | 8.0+ |
+| **Database** | MySQL / MariaDB | 8.0+ / 10.5+ |
+| **Web Server** | Apache / Nginx | Latest |
+| **Frontend** | Bootstrap | 5.3.2 |
+| **Icons** | Bootstrap Icons | 1.11.1 |
+| **Container** | Docker | Latest |
+| **PHP Extensions** | PDO, pdo_mysql, mbstring | - |
 
 ---
 
-## Installation & Setup
+## Installation
 
 ### Prerequisites
 
-- PHP 7.4 or above installed.
-- MySQL or MariaDB database server.
-- Web server (Apache, Nginx, or use PHP built-in server).
-- Git (optional, for cloning the repository).
+- PHP 8.0 or higher
+- MySQL 8.0 or MariaDB 10.5+
+- Apache/Nginx (or PHP built-in server for development)
+- Docker & Docker Compose (optional, for containerized deployment)
 
-### Local Setup
+### Quick Start (Manual Setup)
 
 1. **Clone the Repository**
 
-   ```bash
-   git clone https://github.com/your-username/php-blog-cms.git
-   cd php-blog-cms
-   ```
+```bash
+git clone https://github.com/UNC-GDSC/Blog-CMS-System-PHP.git
+cd Blog-CMS-System-PHP
+```
 
 2. **Configure Environment**
 
-   Create a file named `config.php` in the project root with your database and application settings. Example:
+```bash
+cp .env.example .env
+```
 
-   ```php
-   <?php
-   // config.php
-   define('DB_HOST', 'localhost');
-   define('DB_NAME', 'blog_cms');
-   define('DB_USER', 'your_db_username');
-   define('DB_PASS', 'your_db_password');
-   define('BASE_URL', 'http://localhost/blog-cms/');
-   date_default_timezone_set('UTC');
+Edit `.env` with your database credentials:
 
-   try {
-       $pdo = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME, DB_USER, DB_PASS);
-       $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-   } catch (PDOException $e) {
-       die("Could not connect to the database " . DB_NAME . ": " . $e->getMessage());
-   }
-   ?>
-   ```
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=blog_cms
+DB_USER=your_username
+DB_PASS=your_password
+```
 
-3. **Set Up the Database**
+3. **Create Database**
 
-  - Create a new database called `blog_cms` (or update `DB_NAME` accordingly):
+```bash
+mysql -u root -p
+```
 
-    ```sql
-    CREATE DATABASE blog_cms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-    ```
+```sql
+CREATE DATABASE blog_cms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
-  - Import the provided schema located in `database/schema.sql`:
+4. **Import Schema**
 
-    ```bash
-    mysql -u your_db_username -p blog_cms < database/schema.sql
-    ```
+```bash
+mysql -u your_username -p blog_cms < database/schema.sql
+```
+
+5. **Set Permissions**
+
+```bash
+chmod -R 755 .
+chmod -R 777 logs/
+```
+
+6. **Start PHP Server**
+
+```bash
+cd public
+php -S localhost:8000
+```
+
+7. **Access Application**
+
+Open your browser and navigate to:
+- **Application**: http://localhost:8000
+- **First**: Register a new user account
 
 ---
 
-## Database Schema
+## Configuration
 
-The SQL schema in `database/schema.sql` sets up the following tables:
+### Environment Variables
 
-- **users** (optional for future authentication):
+All configuration is managed through the `.env` file:
 
-  ```sql
-  CREATE TABLE IF NOT EXISTS users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      username VARCHAR(50) NOT NULL UNIQUE,
-      password VARCHAR(255) NOT NULL,
-      email VARCHAR(100),
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );
-  ```
+```env
+# Application
+APP_NAME="Blog CMS System"
+APP_ENV=development          # development | production
+APP_DEBUG=true               # true | false
+APP_URL=http://localhost:8000
 
-- **posts** (for blog posts):
+# Database
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=blog_cms
+DB_USER=root
+DB_PASS=
 
-  ```sql
-  CREATE TABLE IF NOT EXISTS posts (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      title VARCHAR(150) NOT NULL,
-      content TEXT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-  );
-  ```
+# Session
+SESSION_LIFETIME=7200        # 2 hours in seconds
+SESSION_NAME=blog_cms_session
 
-- **comments** (optional for future use):
+# Security
+SECRET_KEY=your-secret-key-change-in-production
+CSRF_TOKEN_EXPIRY=3600      # 1 hour
 
-  ```sql
-  CREATE TABLE IF NOT EXISTS comments (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      post_id INT NOT NULL,
-      author VARCHAR(100),
-      content TEXT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (post_id) REFERENCES posts(id)
-  );
-  ```
+# Timezone
+APP_TIMEZONE=UTC
 
----
+# Logging
+LOG_LEVEL=debug             # debug | info | warning | error
+LOG_PATH=logs/app.log
 
-## File Structure
-
-```
-php-blog-cms/
-├── config.php
-├── index.php
-├── create_post.php
-├── view_post.php
-├── edit_post.php
-├── delete_post.php
-├── inc/
-│   ├── header.php
-│   └── footer.php
-└── database/
-    └── schema.sql
+# Pagination
+POSTS_PER_PAGE=10
 ```
 
-- **config.php:** Contains configuration settings and creates a PDO connection.
-- **index.php:** Lists all blog posts.
-- **create_post.php:** Provides a form to create new blog posts.
-- **view_post.php:** Displays a single post.
-- **edit_post.php:** Provides a form to edit an existing post.
-- **delete_post.php:** Deletes a post.
-- **inc/header.php & inc/footer.php:** Common header and footer for the pages.
-- **database/schema.sql:** SQL script to set up the database schema.
+### Production Considerations
+
+For production deployment, ensure:
+
+1. Set `APP_ENV=production` and `APP_DEBUG=false`
+2. Use a strong, random `SECRET_KEY`
+3. Configure HTTPS for secure cookies
+4. Set appropriate file permissions
+5. Enable log rotation
+6. Use a dedicated database user with limited privileges
 
 ---
 
 ## Usage
 
-### Web Interface
+### User Registration
 
-- **Homepage:**  
-  Visit `http://localhost/blog-cms/` to see a list of blog posts.
+1. Navigate to `/public/register.php`
+2. Fill in username, email, and password (min 6 characters)
+3. Submit to create account
 
-- **Create Post:**  
-  Navigate to `http://localhost/blog-cms/create_post.php` to create a new post.
+### Login
 
-- **View Post:**  
-  Click on "Read More" from any post card on the homepage to view full content.
+1. Navigate to `/public/login.php`
+2. Enter credentials
+3. Access protected features after successful login
 
-- **Edit/Delete Post:**  
-  Use the corresponding buttons on each post to edit or delete posts.
+### Managing Posts
 
-### Running the Application with PHP’s Built-In Server
+**Create Post:**
+- Click "New Post" in navigation (requires login)
+- Enter title (3-200 chars) and content (min 10 chars)
+- Submit to publish
 
-From the project directory, run:
+**Edit Post:**
+- Click "Edit" button on any post
+- Modify content
+- Submit to save changes
 
-```bash
-php -S localhost:8000
+**Delete Post:**
+- Click "Delete" button on any post
+- Confirm deletion in popup
+- Post is permanently removed
+
+**Search Posts:**
+- Use search bar on homepage
+- Search by title or content
+- Results are paginated
+
+---
+
+## Security Features
+
+### CSRF Protection
+
+All forms include CSRF tokens that are validated on submission:
+
+```php
+<?= CSRF::field() ?>  // Generates hidden input
+CSRF::verify();        // Validates token
 ```
 
-Then, open your browser at [http://localhost:8000](http://localhost:8000).
+### Input Validation
+
+Comprehensive validation with custom rules:
+
+```php
+$validator = new Validator($data);
+$validator->rule('title', 'required|min:3|max:200', 'Title')
+          ->rule('email', 'required|email', 'Email');
+
+if ($validator->fails()) {
+    $errors = $validator->errors();
+}
+```
+
+### Password Security
+
+- Passwords are hashed using `password_hash()` with bcrypt
+- Password verification uses timing-safe comparison
+- Minimum length requirement enforced
+
+### SQL Injection Prevention
+
+All database queries use prepared statements:
+
+```php
+$stmt = $this->db->prepare("SELECT * FROM posts WHERE id = :id");
+$stmt->execute(['id' => $id]);
+```
+
+### Session Security
+
+- Secure cookie configuration
+- Session ID regeneration on authentication
+- HTTP-only and SameSite cookies
+- Periodic session regeneration
+
+---
+
+## Docker Deployment
+
+### Using Docker Compose
+
+1. **Build and Start Containers**
+
+```bash
+docker-compose up -d
+```
+
+This starts three services:
+- **app**: PHP 8.2 with Apache (port 8000)
+- **db**: MySQL 8.0 (port 3306)
+- **phpmyadmin**: Database management (port 8080)
+
+2. **Access Application**
+
+- **Application**: http://localhost:8000
+- **PHPMyAdmin**: http://localhost:8080
+
+3. **Stop Containers**
+
+```bash
+docker-compose down
+```
+
+4. **View Logs**
+
+```bash
+docker-compose logs -f app
+```
+
+### Environment Variables in Docker
+
+The `.env` file is automatically loaded. Ensure these match your `docker-compose.yml`:
+
+```env
+DB_HOST=db
+DB_NAME=blog_cms
+DB_USER=blog_user
+DB_PASS=blog_password
+```
 
 ---
 
@@ -240,146 +403,173 @@ Then, open your browser at [http://localhost:8000](http://localhost:8000).
 
 ### Manual Testing
 
-- Use your browser to navigate through the application.
-- Verify that posts can be created, viewed, updated, and deleted.
-- Ensure that the database updates accordingly.
+1. **Authentication Flow**
+   - Register new user
+   - Login with credentials
+   - Verify session persistence
+   - Logout and verify redirect
 
-### Automated Testing
+2. **CRUD Operations**
+   - Create post with valid data
+   - Edit post content
+   - Delete post with confirmation
+   - Verify database changes
 
-- (Optional) Write PHPUnit tests to cover key functionalities.
-- Use Postman to test API endpoints if you extend the application with a REST API.
+3. **Validation**
+   - Submit forms with invalid data
+   - Verify error messages
+   - Check CSRF token validation
 
----
+4. **Search & Pagination**
+   - Create multiple posts
+   - Test search functionality
+   - Navigate pagination
 
-## Deployment
+### Automated Testing (Future)
 
-### Apache/Nginx Setup
+PHPUnit tests will be added in the `tests/` directory:
 
-- **Apache:**  
-  Configure a virtual host and ensure `mod_rewrite` is enabled for clean URLs.
-
-- **Nginx:**  
-  Set up a server block similar to the following:
-
-  ```nginx
-  server {
-      listen 80;
-      server_name your-domain.com;
-      root /path/to/php-blog-cms;
-      index index.php index.html;
-  
-      location / {
-          try_files \$uri \$uri/ /index.php?\$query_string;
-      }
-  
-      location ~ \.php$ {
-          include snippets/fastcgi-php.conf;
-          fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
-      }
-  }
-  ```
-
-### Docker Deployment
-
-A sample `Dockerfile` and `docker-compose.yml` are provided (see documentation below for details):
-
-- **Dockerfile:**
-
-  ```dockerfile
-  FROM php:7.4-apache
-  RUN a2enmod rewrite
-  COPY . /var/www/html/
-  RUN docker-php-ext-install pdo pdo_mysql
-  EXPOSE 80
-  CMD ["apache2-foreground"]
-  ```
-
-- **docker-compose.yml:**
-
-  ```yaml
-  version: '3.7'
-  services:
-    web:
-      build: .
-      ports:
-        - "80:80"
-      volumes:
-        - .:/var/www/html
-      depends_on:
-        - db
-    db:
-      image: mysql:5.7
-      restart: always
-      environment:
-        MYSQL_ROOT_PASSWORD: your_root_password
-        MYSQL_DATABASE: blog_cms
-        MYSQL_USER: your_db_username
-        MYSQL_PASSWORD: your_db_password
-      volumes:
-        - db_data:/var/lib/mysql
-  volumes:
-    db_data:
-  ```
-
----
-
-## Security Considerations
-
-- **Input Sanitization:**  
-  Use functions like `htmlspecialchars()` and prepared statements via PDO.
-- **Password Hashing:**  
-  (Future Enhancement) Use `password_hash()` for storing user passwords securely.
-- **Session Security:**  
-  Ensure proper session management and consider HTTPS for production.
-- **Error Handling:**  
-  Log errors instead of displaying them in a production environment.
+```bash
+./vendor/bin/phpunit tests/
+```
 
 ---
 
 ## Future Enhancements
 
-- **User Authentication & Roles:**  
-  Implement login functionality to restrict access to create/edit/delete operations.
-- **Rich Text Editing:**  
-  Integrate a WYSIWYG editor for creating posts.
-- **Comments Module:**  
-  Allow readers to leave comments on posts.
-- **SEO & Analytics:**  
-  Enhance post URLs, metadata, and add tracking for page views.
-- **RESTful API:**  
-  Develop API endpoints for integrating with external applications or a modern JavaScript frontend.
+### Planned Features
+
+- [ ] **Rich Text Editor**: Integrate CKEditor or TinyMCE
+- [ ] **Image Uploads**: File upload support with validation
+- [ ] **Categories & Tags**: Post organization system
+- [ ] **Comments System**: Allow user comments on posts
+- [ ] **User Profiles**: Extended user information and avatars
+- [ ] **Admin Dashboard**: Statistics and management interface
+- [ ] **API Endpoints**: RESTful API for mobile apps
+- [ ] **Email Notifications**: Password reset and notifications
+- [ ] **Social Sharing**: Share posts on social media
+- [ ] **SEO Optimization**: Meta tags and sitemap generation
+- [ ] **Post Drafts**: Save posts without publishing
+- [ ] **Role-Based Access**: Admin, Editor, and Author roles
+
+### Technical Improvements
+
+- [ ] Unit and integration tests
+- [ ] Composer for dependency management
+- [ ] Migration system for database changes
+- [ ] Caching layer (Redis/Memcached)
+- [ ] Rate limiting for API endpoints
+- [ ] CLI commands for admin tasks
+- [ ] Continuous Integration/Deployment
 
 ---
 
-## Troubleshooting & FAQ
+## Troubleshooting
 
-- **Database Connection Issues:**  
-  Ensure that `config.php` has the correct database credentials and that the MySQL server is running.
-- **404 Errors:**  
-  Verify the file paths and URL rewriting configuration in your web server.
-- **Permission Issues:**  
-  Ensure your web server has the necessary permissions to read the project files.
+### Common Issues
+
+**Database Connection Failed**
+- Verify credentials in `.env`
+- Ensure MySQL server is running
+- Check database exists and user has permissions
+
+**CSRF Token Mismatch**
+- Clear browser cookies
+- Ensure `.env` has `SECRET_KEY` set
+- Check session is properly started
+
+**Permission Denied Errors**
+- Run `chmod -R 777 logs/` for log directory
+- Ensure web server can read all files
+
+**Bootstrap/CSS Not Loading**
+- Check internet connection (CDN resources)
+- Verify paths in header.php
+- Check browser console for errors
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Follow these steps:
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature/your-feature`.
-3. Commit your changes with clear messages.
-4. Push your branch and open a pull request detailing your changes.
+We welcome contributions! Please follow these guidelines:
 
-Please adhere to the coding standards and include tests where applicable.
+1. **Fork the Repository**
+2. **Create Feature Branch**: `git checkout -b feature/amazing-feature`
+3. **Commit Changes**: `git commit -m 'Add amazing feature'`
+4. **Push to Branch**: `git push origin feature/amazing-feature`
+5. **Open Pull Request**
+
+### Coding Standards
+
+- Follow PSR-12 coding standards
+- Add PHPDoc comments to all classes and methods
+- Write descriptive commit messages
+- Include tests for new features
+- Update documentation as needed
 
 ---
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+MIT License
+
+Copyright (c) 2025 UNC-CH Google Developer Student Club
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+```
 
 ---
 
-## Authors
+## Authors & Acknowledgments
 
-The UNC-CH Google Developer Student Club (GDSC) team.
+**UNC-CH Google Developer Student Club (GDSC)**
+
+Special thanks to all contributors who helped make this project better!
+
+### Contact
+
+- **GitHub**: [UNC-GDSC](https://github.com/UNC-GDSC)
+- **Issues**: [Report Bug](https://github.com/UNC-GDSC/Blog-CMS-System-PHP/issues)
+- **Pull Requests**: [Contribute](https://github.com/UNC-GDSC/Blog-CMS-System-PHP/pulls)
+
+---
+
+## Project Status
+
+**Current Version**: 2.0.0
+**Status**: Active Development
+**Last Updated**: January 2025
+
+### Changelog
+
+**v2.0.0** - Complete Reorganization & Enhancement
+- Restructured to modern MVC architecture
+- Added user authentication system
+- Implemented CSRF protection
+- Added input validation
+- Upgraded to Bootstrap 5
+- Added Docker support
+- Implemented logging system
+- Added pagination and search
+- Enhanced security features
+- Comprehensive documentation
+
+**v1.0.0** - Initial Release
+- Basic CRUD operations
+- Simple UI with Bootstrap 4
+- MySQL database integration
+
+---
+
+**Built with ❤️ by the UNC-CH GDSC Team**
