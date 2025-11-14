@@ -1,0 +1,66 @@
+# Environment Configuration
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor Files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency Directories
+vendor/
+node_modules/
+
+# Composer
+composer.phar
+composer.lock
+
+# Build Files
+/build/
+/dist/
+
+# Cache
+cache/
+*.cache
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+
+# OS Generated Files
+Thumbs.db
+.DS_Store
+.Spotlight-V100
+.Trashes
+
+# PHPUnit
+.phpunit.result.cache
+/phpunit.xml
+
+# Coverage Reports
+/coverage/
+clover.xml
+
+# Database
+*.sql.gz
+*.sqlite
+*.db
+
+# Uploaded Files (if you have user uploads)
+public/uploads/
+storage/
+
+# Session Files
+sessions/
